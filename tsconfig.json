@@ -26,7 +26,6 @@
   "include": [
     "mock/**/*",
     "src/**/*",
-    "playwright.config.ts",
     "tests/**/*",
     "test/**/*",
     "__test__/**/*",
@@ -35,7 +34,6 @@
     ".eslintrc.js",
     ".stylelintrc.js",
     ".prettierrc.js",
-    "jest.config.js",
     "mock/*"
   ],
   "exclude": ["node_modules", "build", "dist", "scripts", "src/.umi/*", "webpack", "jest"]
