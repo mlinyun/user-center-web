@@ -7,9 +7,17 @@ import type { RunTimeLayoutConfig } from 'umi';
 import { history, Link } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
+import { RequestConfig } from "@@/plugin-request/request";
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
+const registerPath = '/user/register';
+
+/** 全局请求配置 */
+export const request: RequestConfig = {
+  // 设置请求超时时长 10s
+  timeout: 10000,
+}
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -30,7 +38,7 @@ export async function getInitialState(): Promise<{
       const msg = await queryCurrentUser();
       return msg.data;
     } catch (error) {
-      history.push(loginPath);
+      // history.push(loginPath);
     }
     return undefined;
   };
@@ -60,8 +68,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
+      // 设置路由跳转的白名单：注册和登录的路由，不需要登录即可访问
+      const whiteList = [registerPath, loginPath];
+      if (whiteList.includes(location.pathname)) {
+        return;
+      }
+      // 其他路由，如果没有登录，重定向到 login
+      if (!initialState?.currentUser) {
         history.push(loginPath);
       }
     },
