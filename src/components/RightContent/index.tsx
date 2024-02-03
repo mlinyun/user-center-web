@@ -1,5 +1,7 @@
+import { GITHUB_URL } from '@/constants';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import '@umijs/max';
+
 export type SiderTheme = 'light' | 'dark';
 export const Question = () => {
   return (
@@ -9,7 +11,7 @@ export const Question = () => {
         height: 26,
       }}
       onClick={() => {
-        window.open('https://pro.ant.design/docs/getting-started');
+        window.open(GITHUB_URL);
       }}
     >
       <QuestionCircleOutlined />

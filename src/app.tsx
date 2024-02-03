@@ -7,9 +7,13 @@ import type { RunTimeLayoutConfig } from '@umijs/max';
 import { Link, history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
+import {SYSTEM_LOGO} from "@/constants";
+
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const registerPath = '/user/register';
+// 设置路由跳转白名单：注册和登录的路由，不需要登录即可访问
+const NO_NEDD_LOGIN_WHITE_LIST = [registerPath, loginPath];
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -22,18 +26,17 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser({
+      return await queryCurrentUser({
         skipErrorHandler: true,
       });
-      return msg.data;
     } catch (error) {
-      // history.push(loginPath);
+      history.push(loginPath);
     }
     return undefined;
   };
-  // 如果不是登录页面，执行
+  // 如果不是无需登录的页面，则需要执行 fetchUserInfo 函数，获取当前用户信息
   const { location } = history;
-  if (location.pathname !== loginPath) {
+  if (!NO_NEDD_LOGIN_WHITE_LIST.includes(location.pathname)) {
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
@@ -50,23 +53,22 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
+    logo: SYSTEM_LOGO,
     actionsRender: () => [<Question key="doc" />],
     avatarProps: {
-      src: initialState?.currentUser?.avatar,
+      src: initialState?.currentUser?.avatarUrl,
       title: <AvatarName />,
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.username,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      // 设置路由跳转白名单：注册和登录的路由，不需要登录即可访问
-      const whiteList = [registerPath, loginPath];
-      if (whiteList.includes(location.pathname)) {
+      if (NO_NEDD_LOGIN_WHITE_LIST.includes(location.pathname)) {
         return;
       }
       // 其他路由，如果没有登录，重定向到 login
