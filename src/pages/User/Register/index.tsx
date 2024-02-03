@@ -1,10 +1,10 @@
 import { Footer } from '@/components';
-import { GITHUB_URL, LOGIN_BG, SYSTEM_LOGO } from '@/constants';
+import { LOGIN_BG, SYSTEM_LOGO } from '@/constants';
 import { login } from '@/services/ant-design-pro/api';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
+import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { Helmet, Link, history, useModel } from '@umijs/max';
-import { Alert, Divider, Space, Tabs, message } from 'antd';
+import { Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -47,21 +47,8 @@ const useStyles = createStyles(({ token }) => {
     },
   };
 });
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => {
-  return (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
-};
-const Login: React.FC = () => {
+
+const Register: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -79,13 +66,13 @@ const Login: React.FC = () => {
   };
   const handleSubmit = async (values: API.LoginParams) => {
     try {
-      // 登录
+      // 注册
       const user = await login({
         ...values,
         type,
       });
       if (user) {
-        const defaultLoginSuccessMessage = '登录成功！';
+        const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
@@ -96,17 +83,16 @@ const Login: React.FC = () => {
       // 如果失败去设置用户错误信息
       setUserLoginState(user);
     } catch (error) {
-      const defaultLoginFailureMessage = '登录失败，请重试！';
+      const defaultLoginFailureMessage = '注册失败，请重试！';
       console.log(error);
       message.error(defaultLoginFailureMessage);
     }
   };
-  const { status, type: loginType } = userLoginState;
   return (
     <div className={styles.container}>
       <Helmet>
         <title>
-          {'登录'}- {Settings.title}
+          {'注册'}- {Settings.title}
         </title>
       </Helmet>
       <div
@@ -137,14 +123,11 @@ const Login: React.FC = () => {
             items={[
               {
                 key: 'account',
-                label: '账号密码登录',
+                label: '账号密码注册',
               },
             ]}
           />
 
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage content={'错误的账号和密码'} />
-          )}
           {type === 'account' && (
             <>
               <ProFormText
@@ -153,11 +136,11 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined />,
                 }}
-                placeholder={'请输入登录账号'}
+                placeholder={'请输入注册账号'}
                 rules={[
                   {
                     required: true,
-                    message: '登录账号是必填项！',
+                    message: '注册账号是必填项！',
                   },
                 ]}
               />
@@ -167,16 +150,35 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined />,
                 }}
-                placeholder={'请输入登录密码'}
+                placeholder={'请设置账号密码'}
                 rules={[
                   {
                     required: true,
-                    message: '登录密码是必填项！',
+                    message: '账号密码是必填项！',
                   },
                   {
                     min: 8,
                     type: 'string',
-                    message: '登录密码长度不小于 8！',
+                    message: '账号密码长度不小于 8！',
+                  },
+                ]}
+              />
+              <ProFormText.Password
+                name="checkPassword"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined />,
+                }}
+                placeholder={'请确认账号密码'}
+                rules={[
+                  {
+                    required: true,
+                    message: '账号密码是必填项！',
+                  },
+                  {
+                    min: 8,
+                    type: 'string',
+                    message: '账号密码长度不小于 8！',
                   },
                 ]}
               />
@@ -186,24 +188,11 @@ const Login: React.FC = () => {
           <div
             style={{
               marginBottom: 24,
+              paddingRight: 8,
+              float: 'right',
             }}
           >
-            <Space split={<Divider type="vertical" />}>
-              <ProFormCheckbox noStyle name="autoLogin">
-                自动登录
-              </ProFormCheckbox>
-              <Link to="/user/register">没账号，去注册</Link>
-              <a
-                href={GITHUB_URL}
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  float: 'right',
-                }}
-              >
-                忘记密码 ?
-              </a>
-            </Space>
+            <Link to="/user/login">老用户？返回登录</Link>
           </div>
         </LoginForm>
       </div>
@@ -211,4 +200,4 @@ const Login: React.FC = () => {
     </div>
   );
 };
-export default Login;
+export default Register;

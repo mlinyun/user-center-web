@@ -9,6 +9,7 @@ import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
+const registerPath = '/user/register';
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -26,7 +27,7 @@ export async function getInitialState(): Promise<{
       });
       return msg.data;
     } catch (error) {
-      history.push(loginPath);
+      // history.push(loginPath);
     }
     return undefined;
   };
@@ -63,8 +64,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
+      // 设置路由跳转白名单：注册和登录的路由，不需要登录即可访问
+      const whiteList = [registerPath, loginPath];
+      if (whiteList.includes(location.pathname)) {
+        return;
+      }
+      // 其他路由，如果没有登录，重定向到 login
+      if (!initialState?.currentUser) {
         history.push(loginPath);
       }
     },
