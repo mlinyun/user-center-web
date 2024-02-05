@@ -131,6 +131,7 @@ const Welcome: React.FC = () => {
           </p>
           <div
             style={{
+              marginTop: '20px',
               display: 'flex',
               flexWrap: 'wrap',
               gap: 16,
