@@ -1,7 +1,7 @@
 import { Footer } from '@/components';
 import { LOGIN_BG, SYSTEM_LOGO } from '@/constants';
 import { register } from '@/services/ant-design-pro/api';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import {FieldNumberOutlined, LockOutlined, UserOutlined} from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { Helmet, Link, history } from '@umijs/max';
 import { Tabs, message } from 'antd';
@@ -113,6 +113,20 @@ const Register: React.FC = () => {
                   {
                     required: true,
                     message: '注册账号是必填项！',
+                  },
+                ]}
+              />
+              <ProFormText
+                name="planetCode"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <FieldNumberOutlined />,
+                }}
+                placeholder={'请输入星球编号'}
+                rules={[
+                  {
+                    required: true,
+                    message: '星球编号是必填项！',
                   },
                 ]}
               />
