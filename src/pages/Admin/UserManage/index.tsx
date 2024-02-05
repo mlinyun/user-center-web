@@ -32,14 +32,14 @@ const columns: ProColumns<API.CurrentUser>[] = [
     tip: 'username',
   },
   {
-    title: '用户账号',
+    title: '账号',
     dataIndex: 'userAccount',
     copyable: true,
     ellipsis: true,
     tip: 'userAccount',
   },
   {
-    title: '用户头像',
+    title: '头像',
     dataIndex: 'avatarUrl',
     render: (_, record) => (
       <div>
@@ -48,19 +48,33 @@ const columns: ProColumns<API.CurrentUser>[] = [
     ),
   },
   {
+    title: '星号',
+    dataIndex: 'planetCode',
+    copyable: true,
+    tip: '星球编号',
+  },
+  {
     title: '性别',
     dataIndex: 'gender',
     width: 80,
+    render: (_, record) => {
+      const flag = record.gender;
+      let content;
+      if (flag) {
+        content = '男';
+      } else {
+        content = '女';
+      }
+      return <div>{content}</div>;
+    },
   },
   {
     title: '电话',
     dataIndex: 'phone',
-    copyable: true,
   },
   {
     title: '邮件',
     dataIndex: 'email',
-    copyable: true,
   },
   {
     title: '状态',
