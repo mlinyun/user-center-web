@@ -1,6 +1,6 @@
 import { GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
-import {GITHUB_URL} from "@/constants";
+import { GITHUB_URL } from '@/constants';
 const Footer: React.FC = () => {
   const defaultMessage = '凌云 (mlinyun) 出品';
   const currentYear = new Date().getFullYear();
@@ -16,7 +16,11 @@ const Footer: React.FC = () => {
         },
         {
           key: 'github of mlinyun',
-          title: <><GithubOutlined /> 凌云 (mlinyun)</>,
+          title: (
+            <>
+              <GithubOutlined /> 凌云 (mlinyun)
+            </>
+          ),
           href: GITHUB_URL,
           blankTarget: true,
         },

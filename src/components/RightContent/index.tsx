@@ -5,6 +5,7 @@ import { useModel } from 'umi';
 import HeaderSearch from '../HeaderSearch';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
+import { GITHUB_URL } from '@/constants';
 export type SiderTheme = 'light' | 'dark';
 const GlobalHeaderRight: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -47,7 +48,7 @@ const GlobalHeaderRight: React.FC = () => {
       <span
         className={styles.action}
         onClick={() => {
-          window.open('https://pro.ant.design/docs/getting-started');
+          window.open(GITHUB_URL);
         }}
       >
         <QuestionCircleOutlined />

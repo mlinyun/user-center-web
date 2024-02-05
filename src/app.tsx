@@ -7,17 +7,20 @@ import type { RunTimeLayoutConfig } from 'umi';
 import { history, Link } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
-import { RequestConfig } from "@@/plugin-request/request";
+import { RequestConfig } from '@@/plugin-request/request';
+import { SYSTEM_LOGO } from '@/constants';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const registerPath = '/user/register';
+/** 无需用户登录态的页面 */
+const NO_NEED_LOGIN_WHITE_LIST = [registerPath, loginPath];
 
 /** 全局请求配置 */
 export const request: RequestConfig = {
   // 设置请求超时时长 10s
   timeout: 10000,
-}
+};
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -35,15 +38,14 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser();
-      return msg.data;
+      return await queryCurrentUser();
     } catch (error) {
-      // history.push(loginPath);
+      history.push(loginPath);
     }
     return undefined;
   };
-  // 如果不是登录页面，执行
-  if (history.location.pathname !== loginPath) {
+  // 如果不是无需登录的页面，则需要执行 fetchUserInfo 函数，获取当前用户信息
+  if (!NO_NEED_LOGIN_WHITE_LIST.includes(history.location.pathname)) {
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
@@ -51,6 +53,7 @@ export async function getInitialState(): Promise<{
       settings: defaultSettings,
     };
   }
+  // 无需登录的页面，不需要执行 fetchUserInfo 函数
   return {
     fetchUserInfo,
     settings: defaultSettings,
@@ -60,17 +63,17 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
+    // 页面左上角的 logo
+    logo: SYSTEM_LOGO,
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.username,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      // 设置路由跳转的白名单：注册和登录的路由，不需要登录即可访问
-      const whiteList = [registerPath, loginPath];
-      if (whiteList.includes(location.pathname)) {
+      if (NO_NEED_LOGIN_WHITE_LIST.includes(location.pathname)) {
         return;
       }
       // 其他路由，如果没有登录，重定向到 login

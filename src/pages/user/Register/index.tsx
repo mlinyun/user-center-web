@@ -1,20 +1,13 @@
 import Footer from '@/components/Footer';
 import { register } from '@/services/ant-design-pro/api';
-import {
-  LockOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormText,
-} from '@ant-design/pro-components';
-import type { TabsProps } from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LoginForm, ProFormText } from '@ant-design/pro-components';
+import { TabsProps } from 'antd';
 import { message, Tabs } from 'antd';
 import React, { useState } from 'react';
-import { history } from 'umi';
+import { history, Link } from 'umi';
 import styles from './index.less';
-import { SYSTEM_LOGO } from "@/constants";
-
+import { SYSTEM_LOGO } from '@/constants';
 
 const Register: React.FC = () => {
   const [type, setType] = useState<string>('account');
@@ -24,7 +17,7 @@ const Register: React.FC = () => {
     const { userPassword, checkPassword } = values;
     // 校验
     if (userPassword !== checkPassword) {
-      message.error("两次输入的密码不一致");
+      message.error('两次输入的密码不一致');
       return;
     }
     try {
@@ -38,10 +31,10 @@ const Register: React.FC = () => {
         message.success(defaultLoginSuccessMessage);
         /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) return;
-        const {query} = history.location;
+        const { query } = history.location;
         history.push({
           pathname: '/user/login',
-          query
+          query,
         });
         return;
       } else {
@@ -52,13 +45,13 @@ const Register: React.FC = () => {
       message.error(defaultLoginFailureMessage);
     }
   };
-  const items: TabsProps['items'] = [{key: 'account', label: '账号密码注册'}];
+  const items: TabsProps['items'] = [{ key: 'account', label: '账号密码注册' }];
 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         <LoginForm
-          logo={<img className={styles.logo} alt="logo" src={SYSTEM_LOGO}/>}
+          logo={<img className={styles.logo} alt="logo" src={SYSTEM_LOGO} />}
           title="凌云用户中心系统"
           subTitle={'企业核心的用户中心系统，基于 Spring Boot + React 开发的全栈系统'}
           submitter={{
@@ -78,7 +71,7 @@ const Register: React.FC = () => {
                 name="userAccount"
                 fieldProps={{
                   size: 'large',
-                  prefix: <UserOutlined className={styles.prefixIcon}/>,
+                  prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
                 placeholder={'请输入账号'}
                 rules={[
@@ -92,7 +85,7 @@ const Register: React.FC = () => {
                 name="userPassword"
                 fieldProps={{
                   size: 'large',
-                  prefix: <LockOutlined className={styles.prefixIcon}/>,
+                  prefix: <LockOutlined className={styles.prefixIcon} />,
                 }}
                 placeholder={'请输入密码'}
                 rules={[
@@ -103,7 +96,7 @@ const Register: React.FC = () => {
                   {
                     min: 8,
                     type: 'string',
-                    message: '密码长度不小于 8'
+                    message: '密码长度不小于 8',
                   },
                 ]}
               />
@@ -111,7 +104,7 @@ const Register: React.FC = () => {
                 name="checkPassword"
                 fieldProps={{
                   size: 'large',
-                  prefix: <LockOutlined className={styles.prefixIcon}/>,
+                  prefix: <LockOutlined className={styles.prefixIcon} />,
                 }}
                 placeholder={'请确认密码'}
                 rules={[
@@ -122,15 +115,24 @@ const Register: React.FC = () => {
                   {
                     min: 8,
                     type: 'string',
-                    message: '密码长度不小于 8'
+                    message: '密码长度不小于 8',
                   },
                 ]}
               />
             </>
           )}
+          <div
+            style={{
+              marginBottom: 24,
+              paddingRight: 8,
+              float: 'right',
+            }}
+          >
+            <Link to="/user/login">老用户？返回登录</Link>
+          </div>
         </LoginForm>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
