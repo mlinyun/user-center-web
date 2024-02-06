@@ -9,6 +9,8 @@ import defaultSettings from '../config/defaultSettings';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import { RequestConfig } from '@@/plugin-request/request';
 import { SYSTEM_LOGO } from '@/constants';
+import { message } from 'antd';
+import { stringify } from 'querystring';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -16,10 +18,32 @@ const registerPath = '/user/register';
 /** 无需用户登录态的页面 */
 const NO_NEED_LOGIN_WHITE_LIST = [registerPath, loginPath];
 
+/** 自定义响应拦截器 */
+const demoResponseInterceptors = async (response: Response, options: RequestConfig) => {
+  const res = await response.clone().json(); //这里是关键，获取所有接口请求成功之后的数据
+  if (res.code === 0) {
+    return res.data;
+  }
+  if (res.code === 40100) {
+    message.error('请先登录');
+    history.replace({
+      pathname: loginPath,
+      search: stringify({
+        redirect: location.pathname,
+      }),
+    });
+  } else {
+    message.error(res.description);
+  }
+  return res.data;
+};
+
 /** 全局请求配置 */
 export const request: RequestConfig = {
   // 设置请求超时时长 10s
   timeout: 10000,
+  // 响应拦截器
+  responseInterceptors: [demoResponseInterceptors],
 };
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
