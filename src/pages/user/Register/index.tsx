@@ -79,6 +79,16 @@ const Register: React.FC = () => {
                     required: true,
                     message: '账号是必填项！',
                   },
+                  {
+                    min: 4,
+                    type: 'string',
+                    message: '账号长度不小于 4 位！',
+                  },
+                  {
+                    max: 16,
+                    type: 'string',
+                    message: '账号长度不大于 16 位！',
+                  },
                 ]}
               />
               <ProFormText
@@ -92,6 +102,11 @@ const Register: React.FC = () => {
                   {
                     required: true,
                     message: '星球编号是必填项！',
+                  },
+                  {
+                    max: 5,
+                    type: 'string',
+                    message: '星球编号长度不大于 5 位！',
                   },
                 ]}
               />
@@ -110,7 +125,12 @@ const Register: React.FC = () => {
                   {
                     min: 8,
                     type: 'string',
-                    message: '密码长度不小于 8',
+                    message: '密码长度不小于 8 位！',
+                  },
+                  {
+                    max: 16,
+                    type: 'string',
+                    message: '密码长度不大于 16 位！'
                   },
                 ]}
               />
@@ -129,7 +149,12 @@ const Register: React.FC = () => {
                   {
                     min: 8,
                     type: 'string',
-                    message: '密码长度不小于 8',
+                    message: '密码长度不小于 8 位！',
+                  },
+                  {
+                    max: 16,
+                    type: 'string',
+                    message: '密码长度不大于 16 位！'
                   },
                 ]}
               />
