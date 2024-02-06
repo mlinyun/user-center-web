@@ -4,7 +4,7 @@ import { login } from '@/services/ant-design-pro/api';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
 import { Helmet, Link, history, useModel } from '@umijs/max';
-import { Alert, Divider, Space, Tabs, message } from 'antd';
+import { Divider, Space, Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -25,22 +25,8 @@ const useStyles = createStyles(() => {
     },
   };
 });
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => {
-  return (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
-};
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  const [, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
@@ -79,7 +65,7 @@ const Login: React.FC = () => {
       message.error(defaultLoginFailureMessage);
     }
   };
-  const { status, type: loginType } = userLoginState;
+
   return (
     <div className={styles.container}>
       <Helmet>
@@ -120,9 +106,6 @@ const Login: React.FC = () => {
             ]}
           />
 
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage content={'错误的账号和密码'} />
-          )}
           {type === 'account' && (
             <>
               <ProFormText
@@ -169,7 +152,7 @@ const Login: React.FC = () => {
                   {
                     max: 16,
                     type: 'string',
-                    message: '登录密码长度不大于 16 位!'
+                    message: '登录密码长度不大于 16 位!',
                   },
                 ]}
               />

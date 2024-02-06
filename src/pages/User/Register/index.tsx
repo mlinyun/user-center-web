@@ -81,8 +81,10 @@ const Register: React.FC = () => {
           logo={<img className={styles.logo} alt="logo" src={SYSTEM_LOGO} />}
           title="凌云用户中心系统"
           subTitle={'企业核心的用户中心系统，基于 Spring Boot + React 开发的全栈项目'}
-          initialValues={{
-            autoLogin: true,
+          submitter={{
+            searchConfig: {
+              submitText: '注册',
+            },
           }}
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);

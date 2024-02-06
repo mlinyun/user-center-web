@@ -99,11 +99,15 @@ export const errorConfig: RequestConfig = {
     (response) => {
       // 拦截响应数据，进行个性化处理
       const { data } = response as unknown as ResponseStructure;
-
-      if (data?.success === false) {
-        message.error('请求失败！');
+      if (data.code === 0) {
+        return response.data;
       }
-      return response;
+      if (data.code === 40100) {
+        message.error('请先登录');
+      } else {
+        message.error(data.description);
+      }
+      return response.data;
     },
   ],
 };
