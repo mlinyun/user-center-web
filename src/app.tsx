@@ -1,4 +1,5 @@
 import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
+import { SYSTEM_LOGO } from '@/constants';
 import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
@@ -6,7 +7,6 @@ import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import {SYSTEM_LOGO} from "@/constants";
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
